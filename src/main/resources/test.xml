@@ -14,19 +14,19 @@
     </log>
     <log>
         <timestamp>1455812968</timestamp>
-        <userId>user2</userId>
+        <userId>user3</userId>
         <url>http://google.com</url>
-        <seconds>30</seconds>
+        <seconds>60</seconds>
     </log>
     <log>
         <timestamp>1455812411</timestamp>
-        <userId>user2</userId>
+        <userId>user10</userId>
         <url>http://hh.ru</url>
         <seconds>90</seconds>
     </log>
     <log>
         <timestamp>1455812684</timestamp>
-        <userId>user2</userId>
+        <userId>user3</userId>
         <url>http://vk.com</url>
         <seconds>50</seconds>
     </log>
