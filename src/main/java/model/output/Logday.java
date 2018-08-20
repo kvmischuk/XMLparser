@@ -4,7 +4,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,13 +12,25 @@ import java.util.Objects;
 @XmlRootElement(name = "logday")
 public class Logday {
 
-    private LocalDate date;
+    @XmlElement(name = "date")
+    private String date;
 
     @XmlElement(name = "user", type = UserEntry.class)
     private List<UserEntry> userEntries = new ArrayList<>();
 
-    public Logday(LocalDate date) {
+    public Logday() {
+    }
+
+    public Logday(String date) {
         this.date = date;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public List<UserEntry> getUserEntries() {
+        return userEntries;
     }
 
     public void updateEntries(UserEntry entry) {

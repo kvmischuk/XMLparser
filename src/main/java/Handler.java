@@ -13,10 +13,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Handler {
+
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
 
     public List<Log> unmarshal(File file) throws JAXBException {
 
@@ -40,22 +44,26 @@ public class Handler {
         List<Logday> logdays = new ArrayList<>();
         for (Log log : logs) {
             Instant instant = Instant.ofEpochSecond(log.getTimestamp());
-            LocalDate localDate = LocalDate.ofInstant(instant, ZoneOffset.UTC);
-            if (LocalDate.ofInstant(instant.plusSeconds((long) log.getSeconds()), ZoneOffset.UTC).equals(localDate)) {
+            String date = dateTimeFormatter.format(LocalDate.ofInstant(instant,ZoneOffset.UTC));
+            Instant instant1 = instant.plusSeconds(log.getSeconds());
+            String date1 = dateTimeFormatter.format(LocalDate.ofInstant(instant1,ZoneOffset.UTC));
+            if (date1.equals(date)) {
                 UserEntry entry = new UserEntry(log.getUserId(), log.getUrl(), log.getSeconds());
-                Logday logday = new Logday(localDate);
+                Logday logday = new Logday(date);
                 updateLogdays(logdays, logday, entry);
             } else {
-                Instant instant1 = instant.plusSeconds(log.getSeconds());
-                LocalDate localDate1 = LocalDate.ofInstant(instant1, ZoneOffset.UTC);
-                long sec = (instant1.toEpochMilli() - localDate1.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()) / 1000;
+                long sec = (instant1.toEpochMilli() - LocalDate.ofInstant(instant1,ZoneOffset.UTC).atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli())/1000;
                 UserEntry entry = new UserEntry(log.getUserId(),log.getUrl(), (int) (log.getSeconds()-sec));
                 UserEntry entry1 = new UserEntry(log.getUserId(),log.getUrl(),(int) sec);
-                Logday logday = new Logday(localDate);
-                Logday logday1 = new Logday(localDate1);
+                Logday logday = new Logday(date);
+                Logday logday1 = new Logday(date1);
                 updateLogdays(logdays,logday,entry);
                 updateLogdays(logdays,logday1,entry1);
             }
+        }
+        logdays.sort(Comparator.comparing(logday -> LocalDate.parse(logday.getDate(), dateTimeFormatter)));
+        for (Logday l : logdays) {
+            l.getUserEntries().sort(Comparator.comparing(u -> Integer.parseInt(u.getUserId().substring(4))));
         }
         return logdays;
     }

@@ -3,6 +3,7 @@ package model.output;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Objects;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -15,8 +16,10 @@ public class UserEntry {
 
     private int average;
 
+    @XmlTransient
     private int total;
 
+    @XmlTransient
     private int count = 0;
 
     public String getUserId() {
@@ -32,6 +35,8 @@ public class UserEntry {
         return average;
     }
 
+    public UserEntry() {
+    }
 
     public UserEntry(String userId, String url, int total) {
         this.userId = userId;
