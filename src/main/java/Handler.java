@@ -20,9 +20,9 @@ import java.util.List;
 
 public class Handler {
 
-    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
 
-    public List<Log> unmarshal(File file) throws JAXBException {
+    public static List<Log> unmarshal(File file) throws JAXBException {
 
         JAXBContext context = JAXBContext.newInstance(Input.class);
         Unmarshaller um = context.createUnmarshaller();
@@ -31,7 +31,7 @@ public class Handler {
         return input.getLogs();
     }
 
-    public void marshal(List<Logday> logdays, File file) throws IOException, JAXBException {
+    public static void marshal(List<Logday> logdays, File file) throws IOException, JAXBException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
         JAXBContext context = JAXBContext.newInstance(Output.class);
         Marshaller m = context.createMarshaller();
@@ -40,7 +40,7 @@ public class Handler {
         writer.close();
     }
 
-    public List<Logday> convert(List<Log> logs) {
+    public static List<Logday> convert(List<Log> logs) {
         List<Logday> logdays = new ArrayList<>();
         for (Log log : logs) {
             Instant instant = Instant.ofEpochSecond(log.getTimestamp());
@@ -68,7 +68,7 @@ public class Handler {
         return logdays;
     }
 
-    public void updateLogdays(List<Logday> logdays, Logday logday, UserEntry entry) {
+    public static void updateLogdays(List<Logday> logdays, Logday logday, UserEntry entry) {
         for (Logday l : logdays) {
             if (l.equals(logday)) {
                 l.updateEntries(entry);
