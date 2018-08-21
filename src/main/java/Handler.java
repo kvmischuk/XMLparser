@@ -44,15 +44,15 @@ public class Handler {
         List<Logday> logdays = new ArrayList<>();
         for (Log log : logs) {
             Instant instant = Instant.ofEpochSecond(log.getTimestamp());
-            String date = dateTimeFormatter.format(LocalDate.ofInstant(instant,ZoneOffset.UTC));
+            String date = dateTimeFormatter.format(LocalDateTime.ofInstant(instant,ZoneOffset.UTC));
             Instant instant1 = instant.plusSeconds(log.getSeconds());
-            String date1 = dateTimeFormatter.format(LocalDate.ofInstant(instant1,ZoneOffset.UTC));
+            String date1 = dateTimeFormatter.format(LocalDateTime.ofInstant(instant1,ZoneOffset.UTC));
             if (date1.equals(date)) {
                 UserEntry entry = new UserEntry(log.getUserId(), log.getUrl(), log.getSeconds());
                 Logday logday = new Logday(date);
                 updateLogdays(logdays, logday, entry);
             } else {
-                long sec = (instant1.toEpochMilli() - LocalDate.ofInstant(instant1,ZoneOffset.UTC).atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli())/1000;
+                long sec = (instant1.toEpochMilli() - LocalDateTime.ofInstant(instant1,ZoneOffset.UTC).toLocalDate().atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli())/1000;
                 UserEntry entry = new UserEntry(log.getUserId(),log.getUrl(), (int) (log.getSeconds()-sec));
                 UserEntry entry1 = new UserEntry(log.getUserId(),log.getUrl(),(int) sec);
                 Logday logday = new Logday(date);
